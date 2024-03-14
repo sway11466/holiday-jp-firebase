@@ -1,0 +1,186 @@
+openapi: '3.0.2'
+info:
+  title: API Title
+  version: '1.0'
+
+servers:
+  - url: https://localhost:8001/v1
+
+paths:
+
+  /holiday:
+    get:
+      summary: 休日を取得する
+      description: |-
+        - パラメーターで指定した日付が休日の場合はレスポンスコード200で休日情報を返却します
+        - パラメーターで指定した日付が休日でない場合はレスポンスコード404で { holiday: false } を返却します
+        - パラメーターの日付はJSTで指定します
+        - パラメーターが未指定の場合はサーバーの日付をJST換算で使用します
+      parameters:
+        - in: query
+          name: date
+          required: false
+          schema:
+            type: string
+            example: 2024-01-08
+            format: date
+            default: JST換算したサーバーのシステム日付
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/holiday"
+        '400':
+          description: Bad Request (Invalid date format)
+        '404':
+          description: Not Found (Not Holiday)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  holiday:
+                    type: boolean
+                    example: false
+
+  /weekend:
+    get:
+      summary: 週末を取得する
+      description: |-
+        - パラメーターで指定した日付が週末の場合はレスポンスコード200で日付情報を返却します
+        - パラメーターで指定した日付が週末でない場合はレスポンスコード404で { weekend: false } を返却します
+        - パラメーターの日付はJSTで指定します
+        - パラメーターが未指定の場合はサーバーの日付をJST換算で使用します
+      parameters:
+        - in: query
+          name: date
+          required: false
+          schema:
+            type: string
+            example: 2024-01-07
+            format: date
+            default: JST換算したサーバーのシステム日付
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/weekend"
+        '400':
+          description: Bad Request (Invalid date format)
+        '404':
+          description: Not Found (Not Weekend)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  weekend:
+                    type: boolean
+                    example: false
+
+  /weekday:
+    get:
+      summary: 平日を取得する
+      description: |-
+        - パラメーターで指定した日付が平日の場合はレスポンスコード200で日付情報を返却します
+        - パラメーターで指定した日付が平日でない場合はレスポンスコード404で { weekday: false } を返却します
+        - パラメーターの日付はJSTで指定します
+        - パラメーターが未指定の場合はサーバーの日付をJST換算で使用します
+      parameters:
+        - in: query
+          name: date
+          required: false
+          schema:
+            type: string
+            example: 2024-01-09
+            format: date
+            default: JST換算したサーバーのシステム日付
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/weekday"
+        '400':
+          description: Bad Request (Invalid date format)
+        '404':
+          description: Not Found (Not Weekday)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  weekday:
+                    type: boolean
+                    example: false
+
+components:
+  schemas:
+
+    holiday:
+      type: object
+      properties:
+        holiday:
+          type: boolean
+          example: true
+        year:
+          type: number
+          example: 2024
+        month:
+          type: number
+          example: 1
+        date:
+          type: number
+          example: 8
+        name:
+          type: string
+          example: 成人の日
+        iso-date:
+          type: string
+          format: date
+          example: 2024-01-08T00:00:00+09:00
+
+    weekend:
+      type: object
+      properties:
+        weekend:
+          type: boolean
+          example: true
+        year:
+          type: number
+          example: 2024
+        month:
+          type: number
+          example: 1
+        date:
+          type: number
+          example: 7
+        iso-date:
+          type: string
+          format: date
+          example: 2024-01-07T00:00:00+09:00
+
+    weekday:
+      type: object
+      properties:
+        weekday:
+          type: boolean
+          example: true
+        year:
+          type: number
+          example: 2024
+        month:
+          type: number
+          example: 1
+        date:
+          type: number
+          example: 9
+        iso-date:
+          type: string
+          format: date
+          example: 2024-01-09T00:00:00+09:00
