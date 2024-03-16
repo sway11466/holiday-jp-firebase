@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "sway-holidayjp-dev"
-  }
+    "prd": "sway-holidayjp-prd",
+    "dev": "sway-holidayjp-dev"
+  },
+  "targets": {},
+  "etags": {}
 }

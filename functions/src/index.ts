@@ -10,3 +10,5 @@ setGlobalOptions({
  * def functions
  */
 export {holiday} from "./holiday";
+export {weekend} from "./weekend";
+export {weekday} from "./weekday";

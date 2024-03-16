@@ -2,8 +2,8 @@ import {onRequest} from "firebase-functions/v2/https";
 import * as logger from "firebase-functions/logger";
 import {HolidayJPCondition, useHolidayJP} from "@sway11466/holiday-jp-npm";
 
-export const holiday = onRequest((request, response) => {
-  logger.info("[holiday] called.", {structuredData: true});
+export const weekend = onRequest((request, response) => {
+  logger.info("[weekend] called.", {structuredData: true});
 
   // create date as jst
   const jstDate = request.query.date ?
@@ -22,7 +22,7 @@ export const holiday = onRequest((request, response) => {
     month: jstDate.getMonth() + 1,
     day: jstDate.getDate(),
   };
-  const holyday = holidayjp.get(cond);
+  const weekend = holidayjp.isWeekend(cond);
 
   // create iso string on jst
   const fillYear = String(cond.year);
@@ -31,13 +31,12 @@ export const holiday = onRequest((request, response) => {
   const isoString = `${fillYear}-${fillMonth}-${fillDay}T00:00:00+09:00`;
 
   // response
-  const status = holyday.length > 0 ? 200 : 404;
+  const status = weekend ? 200 : 404;
   const payload = {
-    "holiday": (holyday.length > 0),
+    "weekend": weekend,
     "year": cond.year,
     "month": cond.month,
     "date": cond.day,
-    "name": (holyday.length > 0) ? holyday[0].name : "",
     "iso-date": isoString,
   };
 
